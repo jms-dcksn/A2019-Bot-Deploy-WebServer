@@ -29,7 +29,7 @@ app.get('', (req, res) => {
     })
 })
 
-//Endpoint that will be called by client-side javeascript upon clicking Run Bot button
+//Endpoint that will be called by client-side javascript upon clicking Run Bot button
 app.get('/run', (req, res) => {
     if(!req.query.crUrl){
         return res.send({
