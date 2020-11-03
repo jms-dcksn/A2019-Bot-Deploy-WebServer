@@ -13,7 +13,7 @@ const botDeploy = (crURL, token, botID, runAsUserID, callback) => {
         },
         body: {
             'fileId': botID,
-            'callbackInfo': {"url": "http://localhost:3000/output"},
+            'callbackInfo': {"url": "http://localhost:3000/response"},
             'runAsUserIds':[runAsUserID],
             'poolIds': [],
             'overrideDefaultDevice': false,

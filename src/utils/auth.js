@@ -5,7 +5,6 @@ const request = require('request')
 const auth = (crURL, userName, apiKey, callback) => {
     
     const url = crURL + '/v1/authentication'
-    console.log(url)
     request({
         url : url,
         method :"POST",

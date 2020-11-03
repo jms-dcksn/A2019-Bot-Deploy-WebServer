@@ -13,7 +13,8 @@
     <div class="main-content">
         {{>header}}
         <p>A simple interface to deploy a bot from an A2019 Control Room and retrieve the output.</p>
-        <p>Enter the required inputs below and click run! The deployment ID and bot output will populate on the screen.</p>
+        <p>As a pre-requisite, ensure you have a Run As User with a default bot runner device registered in your Control Room.</p>
+        <p>Enter the required inputs below and click run! The deployment ID will populate on the screen.</p>
 
         <form>
             <input id="Url", placeholder="Control Room URL" pattern="https?://.+" title="Include http://">
@@ -35,6 +36,8 @@
         <p id="message-1"></p>
         <p id="message-2"></p>
         <p id="message-3"></p>
+
+        {{>botOutput}}
 
     </div>
     

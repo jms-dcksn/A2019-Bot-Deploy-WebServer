@@ -22,6 +22,10 @@ hbs.registerPartials(partialsPath)
 // Setup static directory to serve
 app.use(express.static(publicDirectory))
 
+//Configure Express to use body-parsing middleware
+app.use(express.json())
+app.use(express.urlencoded({ extended: false }))
+
 app.get('', (req, res) => {
     res.render('index', {
         title: 'A2019 Bot Deploy App',
@@ -74,7 +78,10 @@ app.get('/run', (req, res) => {
     })
 })
 
-
+app.post('/response', (req, res) => {
+    console.log('Bot Output: '+req.body.botOutput)
+    console.log('Bot run status: '+req.body.status)
+})
 
 app.listen(port, () => {
     console.log('Server is up on port '+port)
