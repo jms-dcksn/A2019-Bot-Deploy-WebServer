@@ -3,7 +3,9 @@ const request = require('request')
 //Authenticates with the Control Room and returns the JWT
 
 const auth = (crURL, userName, apiKey, callback) => {
+    
     const url = crURL + '/v1/authentication'
+    console.log(url)
     request({
         url : url,
         method :"POST",
