@@ -28,55 +28,69 @@ app.use(express.urlencoded({ extended: false }))
 
 app.get('', (req, res) => {
     res.render('index', {
-        title: 'A2019 Bot Deploy App',
-        name: 'James Dickson'
+        title: 'A360 Bot Deploy App',
+        name: 'Thinking makes it so.'
     })
 })
 
 //Endpoint that will be called by client-side javascript upon clicking Run Bot button
-app.get('/run', (req, res) => {
+app.get('/run', async (req, res) => {
     if(!req.query.crUrl){
         return res.send({
             error: 'You must provide values for all inputs'
         })
     }
-    if(req.query.crUrl.endsWith('/')){
-        var newURL = req.query.crUrl.substring(0, req.query.crUrl.length-1)
-      } else {
-        var newURL = req.query.crUrl
-      }
+    //ensure url ends with a '/'
+    let newURL = req.query.crUrl
+    if(!newURL.endsWith('/')){
+        newURL += '/'
+    }
 //Code to make API calls to A2019 CR
-    auth(newURL, req.query.userName, req.query.apiKey, (error, {token}={}) => {
-        if (error){
-            return res.send({
-                error: error
-            })
-        }
-        
-        runAsUser(newURL, token, req.query.runner, (error, {userId, device}={}) => {
-            if(error){
-                return res.send({
-                    error: error
-                })
-            }
+    const [tokenError, token] = await auth(newURL, req.query.userName, req.query.apiKey)
+    if(tokenError){ return res.send({ error: tokenError }) }   
+
+    const [userError, userId] = await runAsUser(newURL, token, req.query.runner)
+    if(userError){ return res.send({ error: userError }) }
                 
-            bot(newURL, token, req.query.bot, (error, {botId}={}) => {
-                if (error){
-                    return res.send({error: error})
-                }
-    
-                botDeploy(newURL, token, botId, userId, (error, {deploymentId}={}) => {
-                    if(error){
-                        return res.send({error: error})
-                    }
-                    res.send({
-                        deploymentId: deploymentId
-                    })
-                })
-            })
-        })
+    const [deployError, deploymentId] = await botDeploy(newURL, token, req.query.bot, userId, req.query.poolId, {}, {})
+    if(deployError){ return res.send({ error: deployError }) }
+
+    res.send({
+        message: "The deployment request was made successfully. If the bot does not deploy, please check the Control Room Audit Logs for details.",
+        deploymentId: deploymentId
     })
 })
+
+//Generic webhook endpoint with JSON body to define deployment params
+    app.post('/webhook', async (req, res) => {
+        let controlRoomUrl = req.body.controlRoomUrl
+        if ( !controlRoomUrl.endsWith('/') ) {
+            controlRoomUrl += '/'
+        }
+        const [tokenError, token] = await auth(controlRoomUrl, req.body.userName, req.body.password)
+        if(tokenError){ res.send({
+                error: tokenError
+            })
+        }
+    
+        const [userError, userId] = await runAsUser(controlRoomUrl, token, req.body.runAsUser)
+        if(userError){ res.send({
+                error: userError
+            })
+        }
+    
+        const [deployError, deploymentId] = await botDeploy(controlRoomUrl, token, req.body.botId, userId, req.body.poolId, req.body.botInput, req.body.callbackInfo)
+        if(deployError){ res.send({
+            error: deployError
+        })
+    }
+                    
+        res.send({
+                    message: "The deployment request was made successfully. If the bot does not deploy, please check the Control Room Audit Logs for details.",
+                    deploymentId: deploymentId,
+                    callbackInfo: req.body.callbackInfo
+                })
+});
 
 app.post('/response', (req, res) => {
     console.log('Bot Output: '+req.body.botOutput)

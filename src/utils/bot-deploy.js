@@ -1,36 +1,35 @@
-const request = require('request')
+const axios = require('axios')
 
-//Return the run as user ID to be used in the bot deployment API
-
-const botDeploy = (crURL, token, botID, runAsUserID, callback) => {
-    const url = crURL + '/v3/automations/deploy'
-    request({
-        url : url,
-        method :"POST",
-        headers : {
-          "content-type": "application/json",
-          "X-Authorization": token
-        },
-        body: {
-            'fileId': botID,
-            'callbackInfo': {"url": "http://localhost:3000/response"},
-            'runAsUserIds':[runAsUserID],
-            'poolIds': [],
-            'overrideDefaultDevice': false,
-            'botInput': {}
-         },
-        json: true
-      }, (e, r, body)=>{
-        if(e){
-            callback('Connection with control room failed. Please try again.', undefined)
-        } else if (r.body.message){
-            callback(body.message, undefined)
-        } else {
-            callback(undefined, {
-                deploymentId: r.body.deploymentId
-            })
+const botDeploy = async (url, token, botId, runAsUserId, poolId, botInput, callbackInfo) => {
+    url = url + 'v3/automations/deploy'
+    try{
+        const { data } = await axios(
+        {
+            method: 'post',
+            url: url,
+            data: {
+                    'fileId': botId,
+                    'callbackInfo':{callbackInfo},
+                    'runAsUserIds':[runAsUserId], //Run As User should have default device set - otherwise Pool ID is needed
+                    'poolIds': [poolId],
+                    'overrideDefaultDevice': false,
+                    'botInput': {botInput}
+                },
+            headers : {
+                "Content-Type": "application/json",
+                "X-Authorization": token
+            }
+        });
+        if(data.message){
+            const message = "Deploy API failed. " + data.message
+            return [message, undefined]
         }
-    })
+        const deploymentId = data.deploymentId
+        return [undefined, deploymentId]
+    } catch (error) {
+        return ["Deploy API failed. " + error.response.data.message, undefined]
+        
+    }
 }
 
 module.exports = botDeploy

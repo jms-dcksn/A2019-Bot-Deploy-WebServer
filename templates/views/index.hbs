@@ -3,7 +3,7 @@
 <html>
     
 <head>
-    <title>Home</title>
+    <title>API-based Bot Deployment</title>
     <link rel="stylesheet" href="/css/styles.css"> 
     
 </head>
@@ -12,35 +12,51 @@
 <body>
     <div class="main-content">
         {{>header}}
-        <p>A simple interface to deploy a bot from an A2019 Control Room and retrieve the output.</p>
-        <p>As a pre-requisite, ensure you have a Run As User with a default bot runner device registered in your Control Room.</p>
-        <p>Enter the required inputs below and click run! The deployment ID will populate on the screen.</p>
+        <div>
+            <p>A simple interface to deploy a bot from an A2019 Control Room and retrieve the output.</p>
+            <p>As a pre-requisite, ensure you have a Run As User with a default bot runner device registered in your Control Room. Alternatively, a pool ID can be provided to target a device in a device pool. All typical roles/permissions apply.</p>
+            <p>Enter the required inputs below and click run! The deployment ID will populate on the screen.</p>
 
         <form>
-            <input id="Url", placeholder="Control Room URL" pattern="https?://.+" title="Include http://">
+            <label for="Url" class="required">Control Room: </label>
+            <input id="Url" placeholder="Control Room URL" pattern="https?://.+" title="Include http://" required>
         </form>
         <form>
-            <input id="userName", placeholder="User Name">
+            <label for="userName" class="required">Credentials: </label>
+            <input type="text" id="userName" placeholder="User Name" required>
+            <input type="password" id="key" placeholder="Password" required>
         </form>
         <form>
-            <input type="password", id="key", placeholder="Password">
+            <label for="runner" class="required">Run as user: </label>
+            <input id="runner" placeholder="Run As User" required>
         </form>
         <form>
-            <input id="runner", placeholder="Run As User">
+            <label for="pool">Device Pool: </label>
+            <input id="pool", placeholder="Pool ID" title="Optional, but needed if Run As User does not have default device set.">
         </form>
         <form id="bot">
-            <input id="botName", placeholder="Bot Name">
+            <label for="botId" class="required">Bot ID: </label>
+            <input id="botId" placeholder="Bot ID" title="Numeric ID of the bot file">
+        </form>
+        <form id="runBot">
             <button id="runBotButton">Run Bot</button>
         </form>
 
-        <p id="message-1"></p>
-        <p id="message-2"></p>
-        <p id="message-3"></p>
-
-        {{>botOutput}}
-
+            <p id="message-1"></p>
+            <p id="message-2"></p>
+            <p id="message-3"></p>
+        </div>
+        <div>
+            <p>This web server also offers a simple endpoint to serve as a webhook handler for easy external integration. </p>
+            <p>Try it out by including a JSON body with all the request parameters represented in the form fields above in a POST request to '[app-url]/webhook' </p>
+            <button id="createJSONBody">Generate JSON Payload</button>
+            <p id="message-json"></p>
+            <pre>
+                <code id="message-code">
+                </code>
+            </pre>
+        </div>
     </div>
-    
     {{>footer}}
     <script src="/js/app.js"></script>
 </body>
