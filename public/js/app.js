@@ -11,6 +11,9 @@ const messageThree = document.querySelector('#message-3')
 const messageJson = document.querySelector('#message-json')
 const messageCode = document.querySelector('#message-code')
 const generateJSON = document.querySelector('#createJSONBody')
+const urlInfo = document.querySelector('#urlInfo')
+
+urlInfo.textContent = window.location.protocol + "//" + window.location.host + "/webhook"
 
 runBotForm.addEventListener('submit', (e) => {
     e.preventDefault()
@@ -52,5 +55,5 @@ generateJSON.addEventListener('click', (e) => {
 
     //console.log('JSON payload generated')
     messageJson.textContent = 'JSON Payload to include in webhook POST request:'
-    messageCode.textContent = '{\n\t"controlRoomUrl": "' + crUrl + '",\n\t"username": " "' + '\n}'
+    messageCode.textContent = '{\n\t"controlRoomUrl": "' + crUrl + '",\n\t"userName": "' + userName + '",\n\t"password": "<your_password>",\n\t"runAsUser": "' + runner + '",\n\t"poolId": ' + poolId + ',\n\t"botId": ' + bot + '\n}'
 })

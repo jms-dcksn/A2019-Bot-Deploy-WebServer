@@ -13,7 +13,7 @@
     <div class="main-content">
         {{>header}}
         <div>
-            <p>A simple interface to deploy a bot from an A2019 Control Room and retrieve the output.</p>
+            <p>A simple interface to deploy a bot from an A360 Control Room and retrieve the output.</p>
             <p>As a pre-requisite, ensure you have a Run As User with a default bot runner device registered in your Control Room. Alternatively, a pool ID can be provided to target a device in a device pool. All typical roles/permissions apply.</p>
             <p>Enter the required inputs below and click run! The deployment ID will populate on the screen.</p>
 
@@ -48,7 +48,11 @@
         </div>
         <div>
             <p>This web server also offers a simple endpoint to serve as a webhook handler for easy external integration. </p>
-            <p>Try it out by including a JSON body with all the request parameters represented in the form fields above in a POST request to '[app-url]/webhook' </p>
+            <p>Try it out by including a JSON body with all the request parameters represented in the form fields above in a POST request to:</p>
+            <pre>
+                <code id="urlInfo">
+                </code>
+            </pre>
             <button id="createJSONBody">Generate JSON Payload</button>
             <p id="message-json"></p>
             <pre>

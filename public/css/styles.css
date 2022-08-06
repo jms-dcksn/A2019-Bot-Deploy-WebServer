@@ -1,5 +1,5 @@
 body{
-    color: #333333;
+    color: #f8f8f8;
     font-family: sans-serif;
     max-width: 800px;
     margin: 0 auto;
@@ -9,6 +9,8 @@ body{
     flex-direction: column;
     min-height: 100vh;
 }
+
+html {background-color: rgb(49, 49, 49)}
 
 .main-content{
     flex-grow: 1;
@@ -52,9 +54,12 @@ input {
 button {
     cursor: pointer;
     border: 1px solid #888888;
-    background: #888888;
+    background: #f5762c;
     color: white;
-    padding: 8px;
+    padding: 10px;
+    margin-top: 8px;
+    margin-bottom: 8px;
+    width: 512px;
 }
 
 .required:after {
