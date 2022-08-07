@@ -13,7 +13,9 @@ const messageCode = document.querySelector('#message-code')
 const generateJSON = document.querySelector('#createJSONBody')
 const urlInfo = document.querySelector('#urlInfo')
 
-urlInfo.textContent = window.location.protocol + "//" + window.location.host + "/webhook"
+let callbackUrl = window.location.protocol + "//" + window.location.host + "/response"
+
+urlInfo.textContent = "curl -d '<json-payload-see-below>' -H \"Content-Type: application/json\" -X POST " + window.location.protocol + "//" + window.location.host + "/webhook"
 
 runBotForm.addEventListener('submit', (e) => {
     e.preventDefault()
@@ -29,7 +31,9 @@ runBotForm.addEventListener('submit', (e) => {
     messageTwo.textContent = ''
     messageThree.textContent = ''
 
-    fetch('/run?crUrl=' + encodeURIComponent(crUrl) + '&userName=' + encodeURIComponent(userName) + '&apiKey=' + encodeURIComponent(apiKey) + '&runner=' + encodeURIComponent(runner) + '&poolId=' + poolId + '&bot=' + encodeURIComponent(bot))
+    console.log(callbackUrl)
+
+    fetch('/run?crUrl=' + encodeURIComponent(crUrl) + '&userName=' + encodeURIComponent(userName) + '&apiKey=' + encodeURIComponent(apiKey) + '&runner=' + encodeURIComponent(runner) + '&poolId=' + poolId + '&bot=' + encodeURIComponent(bot) + '&callbackInfo=' + callbackUrl)
     .then((response) => {
         response.json().then((data) => {
             if(data.error){

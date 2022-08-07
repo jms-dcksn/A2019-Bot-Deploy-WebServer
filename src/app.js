@@ -52,7 +52,7 @@ app.get('/run', async (req, res) => {
     const [userError, userId] = await runAsUser(newURL, token, req.query.runner)
     if(userError){ return res.send({ error: userError }) }
                 
-    const [deployError, deploymentId] = await botDeploy(newURL, token, req.query.bot, userId, req.query.poolId, {}, {})
+    const [deployError, deploymentId] = await botDeploy(newURL, token, req.query.bot, userId, req.query.poolId, {}, req.query.callbackInfo)
     if(deployError){ return res.send({ error: deployError }) }
 
     res.send({
@@ -87,12 +87,11 @@ app.get('/run', async (req, res) => {
                     
         res.send({
                     message: "The deployment request was made successfully. If the bot does not deploy, please check the Control Room Audit Logs for details.",
-                    deploymentId: deploymentId,
-                    callbackInfo: req.body.callbackInfo
+                    deploymentId: deploymentId
                 })
 });
 
-app.post('/response', (req, res) => {
+app.post('/response', async (req, res) => {
     console.log('Bot Output: '+req.body.botOutput)
     console.log('Bot run status: '+req.body.status)
 })

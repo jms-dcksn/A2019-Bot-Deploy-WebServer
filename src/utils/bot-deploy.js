@@ -9,7 +9,7 @@ const botDeploy = async (url, token, botId, runAsUserId, poolId, botInput, callb
             url: url,
             data: {
                     'fileId': botId,
-                    'callbackInfo':{callbackInfo},
+                    'callbackInfo':{'url': callbackInfo},
                     'runAsUserIds':[runAsUserId], //Run As User should have default device set - otherwise Pool ID is needed
                     'poolIds': [poolId],
                     'overrideDefaultDevice': false,
