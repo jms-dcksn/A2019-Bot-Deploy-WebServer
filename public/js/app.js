@@ -63,6 +63,7 @@ getStatusForm.addEventListener('submit', (e) => {
         password: apiKey,
         deploymentId: deploymentId
     }
+    console.log(data)
 
     fetch('/output', {
         method: 'POST',
@@ -75,13 +76,16 @@ getStatusForm.addEventListener('submit', (e) => {
         response.json().then((data) => {
             if(data.error){
                 //update message with error
+                console.log(data.error)
             } else {
                 //update code block with response data
+                console.log(data)
             }
         })
     })
     .catch((error) => {
         //update message with error reported
+        console.log(error)
     })
 
 })
