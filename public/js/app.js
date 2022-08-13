@@ -10,12 +10,15 @@ const messageTwo = document.querySelector('#message-2')
 const messageThree = document.querySelector('#message-3')
 const messageJson = document.querySelector('#message-json')
 const messageCode = document.querySelector('#message-code')
+const getStatusForm = document.querySelector('#getStatus')
 const generateJSON = document.querySelector('#createJSONBody')
 const urlInfo = document.querySelector('#urlInfo')
 
 let callbackUrl = window.location.protocol + "//" + window.location.host + "/response"
 
 urlInfo.textContent = "curl -d '<json-payload-see-below>' -H \"Content-Type: application/json\" -X POST " + window.location.protocol + "//" + window.location.host + "/webhook"
+
+let deploymentId
 
 runBotForm.addEventListener('submit', (e) => {
     e.preventDefault()
@@ -41,10 +44,46 @@ runBotForm.addEventListener('submit', (e) => {
                 
             } else{
             messageOne.textContent = data.message
-            messageTwo.textContent = 'Deployment ID: ' + data.deploymentId
+            deploymentId = data.deploymentId
+            messageTwo.textContent = 'Deployment ID: ' + deploymentId
         }
         })
     })
+})
+
+getStatusForm.addEventListener('submit', (e) => {
+    e.preventDefault()
+    const crUrl = crUrlInput.value
+    const userName = userNameInput.value
+    const apiKey = apiKeyInput.value
+
+    const data = {
+        controlRoomUrl: crUrl,
+        userName: userName,
+        password: apiKey,
+        deploymentId: deploymentId
+    }
+
+    fetch('/output', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+    .then((response) => {
+        response.json().then((data) => {
+            if(data.error){
+                //update message with error
+            } else {
+                //update code block with response data
+            }
+        })
+    })
+    .catch((error) => {
+        //update message with error reported
+    })
+
 })
 
 generateJSON.addEventListener('click', (e) => {

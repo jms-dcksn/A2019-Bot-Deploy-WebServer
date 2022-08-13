@@ -13,7 +13,7 @@ const botDeploy = async (url, token, botId, runAsUserId, poolId, botInput, callb
                     'runAsUserIds':[runAsUserId], //Run As User should have default device set - otherwise Pool ID is needed
                     'poolIds': [poolId],
                     'overrideDefaultDevice': false,
-                    'botInput': {botInput}
+                    'botInput': botInput
                 },
             headers : {
                 "Content-Type": "application/json",

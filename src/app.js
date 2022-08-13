@@ -5,6 +5,7 @@ const auth = require('./utils/auth')
 const bot = require('./utils/bot')
 const botDeploy = require('./utils/bot-deploy')
 const runAsUser = require('./utils/run-as-user')
+const activityList = require('./utils/activity')
 
 const app = express()
 const port = process.env.PORT || 3000
@@ -91,9 +92,24 @@ app.get('/run', async (req, res) => {
                 })
 });
 
-app.post('/response', async (req, res) => {
-    console.log('Bot Output: '+req.body.botOutput)
-    console.log('Bot run status: '+req.body.status)
+app.post('/output', async (req, res) => {
+    let controlRoomUrl = req.body.controlRoomUrl
+        if ( !controlRoomUrl.endsWith('/') ) {
+            controlRoomUrl += '/'
+        }
+        const [tokenError, token] = await auth(controlRoomUrl, req.body.userName, req.body.password)
+        if(tokenError){ res.send({
+                error: tokenError
+            })
+        }
+        const [activityError, status, botOutput] = await activityList(controlRoomUrl, token, req.body.deploymentId)
+        if(activityError) { res.send({
+            error: activityError
+        })}
+        res.send({
+            status: status,
+            botOutput: botOutput
+        })
 })
 
 app.listen(port, () => {
