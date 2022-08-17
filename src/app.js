@@ -93,6 +93,11 @@ app.get('/run', async (req, res) => {
 });
 
 app.post('/output', async (req, res) => {
+    if(!req.body.controlRoomUrl){
+        return res.send({
+            error: 'You must provide values for all inputs'
+        })
+    }
     let controlRoomUrl = req.body.controlRoomUrl
         if ( !controlRoomUrl.endsWith('/') ) {
             controlRoomUrl += '/'

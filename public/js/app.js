@@ -8,6 +8,9 @@ const poolInput = document.querySelector('#pool')
 const messageOne = document.querySelector('#message-1')
 const messageTwo = document.querySelector('#message-2')
 const messageThree = document.querySelector('#message-3')
+const messageFour = document.querySelector('#message-4')
+const messageFive = document.querySelector('#message-5')
+const messageSix = document.querySelector('#message-6')
 const messageJson = document.querySelector('#message-json')
 const messageCode = document.querySelector('#message-code')
 const getStatusForm = document.querySelector('#getStatus')
@@ -53,6 +56,9 @@ runBotForm.addEventListener('submit', (e) => {
 
 getStatusForm.addEventListener('submit', (e) => {
     e.preventDefault()
+    messageFour.textContent = 'Loading...'
+    messageFive.textContent = ''
+    messageSix.textContent = ''
     const crUrl = crUrlInput.value
     const userName = userNameInput.value
     const apiKey = apiKeyInput.value
@@ -77,15 +83,19 @@ getStatusForm.addEventListener('submit', (e) => {
             if(data.error){
                 //update message with error
                 console.log(data.error)
+                messageFour.textContent = data.error
             } else {
                 //update code block with response data
                 console.log(data)
+                messageFour.textContent = 'See Status Below'
+                messageFive.textContent = data
             }
         })
     })
     .catch((error) => {
         //update message with error reported
         console.log(error)
+        messageFour.textContent = error
     })
 
 })
